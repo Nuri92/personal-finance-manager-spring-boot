@@ -1,5 +1,6 @@
 package de.nuri.personalfinancemanager.repository;
 
+import de.nuri.personalfinancemanager.exception.DuplicateCategoryException;
 import de.nuri.personalfinancemanager.model.Category;
 import de.nuri.personalfinancemanager.model.CategoryType;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class InMemoryCategoryRepositoryTest {
 
 		assertThatThrownBy(() -> repository.save(
 				new Category("groceries", CategoryType.EXPENSE)))
-				.isInstanceOf(IllegalArgumentException.class)
+				.isInstanceOf(DuplicateCategoryException.class)
 				.hasMessage("Category name already exists");
 	}
 }

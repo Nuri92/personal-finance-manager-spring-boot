@@ -1,5 +1,6 @@
 package de.nuri.personalfinancemanager.repository;
 
+import de.nuri.personalfinancemanager.exception.DuplicateCategoryException;
 import de.nuri.personalfinancemanager.model.Category;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ public class InMemoryCategoryRepository implements CategoryRepository {
 				.anyMatch(existingCategory ->
 						existingCategory.getName().equalsIgnoreCase(category.getName()));
 		if (nameAlreadyExists) {
-			throw new IllegalArgumentException("Category name already exists");
+			throw new DuplicateCategoryException("Category name already exists");
 		}
 
 		Category storedCategory = category.withId(nextId++);

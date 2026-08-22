@@ -1,5 +1,6 @@
 package de.nuri.personalfinancemanager.service;
 
+import de.nuri.personalfinancemanager.exception.DuplicateCategoryException;
 import de.nuri.personalfinancemanager.model.Category;
 import de.nuri.personalfinancemanager.model.CategoryType;
 import de.nuri.personalfinancemanager.repository.InMemoryCategoryRepository;
@@ -46,7 +47,7 @@ class CategoryServiceTest {
 
 		assertThatThrownBy(() -> service.addCategory(
 				new Category("groceries", CategoryType.EXPENSE)))
-				.isInstanceOf(IllegalArgumentException.class)
+				.isInstanceOf(DuplicateCategoryException.class)
 				.hasMessage("Category name already exists");
 	}
 
@@ -64,7 +65,7 @@ class CategoryServiceTest {
 
 		assertThatThrownBy(() -> service.addCategory(
 				new Category("  groceries  ", CategoryType.EXPENSE)))
-				.isInstanceOf(IllegalArgumentException.class)
+				.isInstanceOf(DuplicateCategoryException.class)
 				.hasMessage("Category name already exists");
 	}
 }
