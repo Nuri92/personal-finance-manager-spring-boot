@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class InMemoryCategoryRepository implements CategoryRepository {
@@ -32,5 +33,12 @@ public class InMemoryCategoryRepository implements CategoryRepository {
 	@Override
 	public synchronized List<Category> findAll() {
 		return new ArrayList<>(storedCategories);
+	}
+
+	@Override
+	public synchronized Optional<Category> findById(Long id) {
+		return storedCategories.stream()
+				.filter(category -> Objects.equals(category.getId(), id))
+				.findFirst();
 	}
 }

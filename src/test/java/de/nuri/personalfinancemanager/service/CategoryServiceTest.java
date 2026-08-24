@@ -1,6 +1,7 @@
 package de.nuri.personalfinancemanager.service;
 
 import de.nuri.personalfinancemanager.exception.DuplicateCategoryException;
+import de.nuri.personalfinancemanager.exception.CategoryNotFoundException;
 import de.nuri.personalfinancemanager.model.Category;
 import de.nuri.personalfinancemanager.model.CategoryType;
 import de.nuri.personalfinancemanager.repository.InMemoryCategoryRepository;
@@ -67,5 +68,21 @@ class CategoryServiceTest {
 				new Category("  groceries  ", CategoryType.EXPENSE)))
 				.isInstanceOf(DuplicateCategoryException.class)
 				.hasMessage("Category name already exists");
+	}
+
+	@Test
+	void shouldGetCategoryById() {
+		Category savedCategory = service.addCategory(
+				new Category("Groceries", CategoryType.EXPENSE));
+
+		assertThat(service.getCategory(savedCategory.getId()))
+				.isEqualTo(savedCategory);
+	}
+
+	@Test
+	void shouldRejectUnknownCategoryId() {
+		assertThatThrownBy(() -> service.getCategory(99L))
+				.isInstanceOf(CategoryNotFoundException.class)
+				.hasMessage("Category with id 99 was not found");
 	}
 }

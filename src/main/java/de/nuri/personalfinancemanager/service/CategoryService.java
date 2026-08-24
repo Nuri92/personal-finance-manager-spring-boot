@@ -1,6 +1,7 @@
 package de.nuri.personalfinancemanager.service;
 
 import de.nuri.personalfinancemanager.model.Category;
+import de.nuri.personalfinancemanager.exception.CategoryNotFoundException;
 import de.nuri.personalfinancemanager.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,10 @@ public class CategoryService {
 
 	public List<Category> getCategories() {
 		return repository.findAll();
+	}
+
+	public Category getCategory(Long id) {
+		return repository.findById(id)
+				.orElseThrow(() -> new CategoryNotFoundException(id));
 	}
 }

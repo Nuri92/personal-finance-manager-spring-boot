@@ -1,6 +1,7 @@
 package de.nuri.personalfinancemanager.controller;
 
 import de.nuri.personalfinancemanager.exception.DuplicateCategoryException;
+import de.nuri.personalfinancemanager.exception.CategoryNotFoundException;
 import de.nuri.personalfinancemanager.model.Category;
 import de.nuri.personalfinancemanager.model.CategoryType;
 import de.nuri.personalfinancemanager.service.CategoryService;
@@ -133,5 +134,30 @@ class CategoryControllerTest {
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.code").value("CATEGORY_ALREADY_EXISTS"))
 				.andExpect(jsonPath("$.message").value("Category name already exists"));
+	}
+
+	@Test
+	void shouldReturnCategoryById() throws Exception {
+		when(categoryService.getCategory(1L)).thenReturn(
+				new Category("Groceries", CategoryType.EXPENSE).withId(1L));
+
+		mockMvc.perform(get("/api/categories/1"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Groceries"))
+				.andExpect(jsonPath("$.type").value("EXPENSE"));
+	}
+
+	@Test
+	void shouldReturnNotFoundForUnknownCategoryId() throws Exception {
+		when(categoryService.getCategory(99L))
+				.thenThrow(new CategoryNotFoundException(99L));
+
+		mockMvc.perform(get("/api/categories/99"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.code").value("CATEGORY_NOT_FOUND"))
+				.andExpect(jsonPath("$.message")
+						.value("Category with id 99 was not found"));
 	}
 }

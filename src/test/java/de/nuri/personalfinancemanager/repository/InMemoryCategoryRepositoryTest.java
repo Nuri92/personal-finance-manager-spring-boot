@@ -43,4 +43,21 @@ class InMemoryCategoryRepositoryTest {
 				.isInstanceOf(DuplicateCategoryException.class)
 				.hasMessage("Category name already exists");
 	}
+
+	@Test
+	void shouldFindCategoryById() {
+		InMemoryCategoryRepository repository = new InMemoryCategoryRepository();
+		Category savedCategory = repository.save(
+				new Category("Groceries", CategoryType.EXPENSE));
+
+		assertThat(repository.findById(savedCategory.getId()))
+				.contains(savedCategory);
+	}
+
+	@Test
+	void shouldReturnEmptyWhenCategoryIdDoesNotExist() {
+		InMemoryCategoryRepository repository = new InMemoryCategoryRepository();
+
+		assertThat(repository.findById(99L)).isEmpty();
+	}
 }

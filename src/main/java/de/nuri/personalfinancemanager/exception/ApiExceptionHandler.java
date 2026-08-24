@@ -46,4 +46,14 @@ public class ApiExceptionHandler {
 		);
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
 	}
+
+	@ExceptionHandler(CategoryNotFoundException.class)
+	public ResponseEntity<ApiError> handleCategoryNotFound(CategoryNotFoundException exception) {
+		ApiError error = new ApiError(
+				"CATEGORY_NOT_FOUND",
+				exception.getMessage(),
+				Map.of()
+		);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+	}
 }
